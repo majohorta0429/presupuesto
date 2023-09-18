@@ -16,7 +16,7 @@ export class IngresarGastoComponent implements OnInit {
     this.nombreGasto = '';
     this.cantidad = 0;
     this.formularioIncorrecto = false;
-    this.textIncorrecto = 'Nombre gasto o cantidad incorrecta';
+    this.textIncorrecto = '';
   }
 
   ngOnInit(): void {
@@ -24,14 +24,26 @@ export class IngresarGastoComponent implements OnInit {
   }
 
   agregarGasto(){
+    if(this.cantidad > this._presupuestoService.restante){
+      this.formularioIncorrecto = true;
+      this.textIncorrecto = 'Cantidad ingresada es mayor al restante';
+      return;
+    }
+    
+    
     if(this.nombreGasto === '' || this.cantidad <= 0){
       this.formularioIncorrecto = true;
+      this.textIncorrecto = 'Nombre gasto o cantidad incorrecta';
     }else{
 
       //Creamos los objetos
+      const GASTO = {
+        nombre: this.nombreGasto,
+        cantidad: this.cantidad
+      }
 
       //Enviamos el objeto a los suscriptores via subjet
-
+      this._presupuestoService.agregarGasto(GASTO);
 
       //Reseteamos formulario 
 
